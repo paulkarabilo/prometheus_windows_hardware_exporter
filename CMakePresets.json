@@ -1,0 +1,70 @@
+{
+	"version": 8,
+	"cmakeMinimumRequired": {
+		"major": 4,
+		"minor": 2,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"name": "ninja-clang",
+			"displayName": "Ninja Multi-Config",
+			"description": "Ninja Multi-Config generator",
+			"binaryDir": "${sourceDir}/Build/${presetName}",
+			"generator": "Ninja Multi-Config",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "clang.exe",
+				"CMAKE_CXX_COMPILER": "clang++.exe",
+				"CMAKE_LINKER": "lld-link.exe",
+				"CMAKE_POLICY_VERSION_MINIMUM": "3.5"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "ninja-clang-debug",
+			"configurePreset": "ninja-clang",
+			"displayName": "Build ninja-clang-debug",
+			"description": "Build Debug configuration",
+			"configuration": "Debug"
+		},
+		{
+			"name": "ninja-clang-release-dbginfo",
+			"configurePreset": "ninja-clang",
+			"displayName": "Build ninja-clang-release-dbginfo",
+			"description": "Build RelWithDebInfo configuration",
+			"configuration": "RelWithDebInfo"
+		},
+		{
+			"name": "ninja-clang-release",
+			"configurePreset": "ninja-clang",
+			"displayName": "Build ninja-clang-release",
+			"description": "Build Release configuration",
+			"configuration": "Release"
+		}
+	],
+	"testPresets": [
+		{
+			"name": "test-base",
+			"hidden": true,
+			"configurePreset": "ninja-clang",
+			"description": "Enable output on failure",
+			"output": {
+				"outputOnFailure": true
+			},
+			"execution": {
+				"noTestsAction": "error"
+			}
+		},
+		{
+			"name": "ninja-clang-debug",
+			"configuration": "Debug",
+			"inherits": "test-base"
+		},
+		{
+			"name": "ninja-clang-release",
+			"configuration": "Release",
+			"inherits": "test-base"
+		}
+	]
+}
