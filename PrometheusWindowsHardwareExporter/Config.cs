@@ -20,5 +20,16 @@ namespace PrometheusWindowsHardwareExporter
             "disk",
             "motherboard"
         };
+
+        [JsonPropertyName("service")]
+        public bool Service { get; set; } = false;
+
+        public bool ShowHelp { get; set; } = false;
+
+        [JsonPropertyName("max_concurrent")]
+        public int MaxConcurrent { get; internal set; } = 10;
+
+        [JsonPropertyName("request_timeout")]
+        public TimeSpan? RequestTimeout { get; internal set; } = TimeSpan.FromSeconds(10);
     }
 }

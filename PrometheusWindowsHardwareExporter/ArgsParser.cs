@@ -45,6 +45,16 @@ namespace PrometheusWindowsHardwareExporter
                     string collectors = a.Substring("--collectors=".Length);
                     config.Collectors = collectors.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 }
+
+                if (a.Equals("--service"))
+                {
+                    config.Service = true;
+                }
+
+                if (a.Equals("--help"))
+                {
+                    config.ShowHelp = true;
+                }
             }
             return config;
         }

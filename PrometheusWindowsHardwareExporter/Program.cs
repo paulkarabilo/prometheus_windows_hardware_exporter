@@ -1,69 +1,56 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.ServiceProcess;
 using LibreHardwareMonitor.Hardware;
 using PrometheusWindowsHardwareExporter;
 
 namespace PrometheusWindowsHardwareExporter
 {
 
-    public class UpdateVisitor : IVisitor
+    internal static class Program
     {
-        public void VisitComputer(IComputer computer)
+        public static async Task Main(string[] args)
         {
-            computer.Traverse(this);
-        }
-        public void VisitHardware(IHardware hardware)
-        {
-            hardware.Update();
-            foreach (IHardware subHardware in hardware.SubHardware) subHardware.Accept(this);
-        }
-        public void VisitSensor(ISensor sensor) { }
-        public void VisitParameter(IParameter parameter) { }
-    }
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
+            bool runAsService = args.Any(a => a.Equals("--service", StringComparison.OrdinalIgnoreCase));
             Config config = ArgsParser.ParseArgs(args);
-            
-            HashSet<string> collectors = new HashSet<string>(config.Collectors, StringComparer.OrdinalIgnoreCase);
+
+            HashSet<string> enabledCollectors = new HashSet<string>(config.Collectors, StringComparer.OrdinalIgnoreCase);
 
             Computer computer = new Computer
             {
-                IsCpuEnabled = collectors.Contains("cpu"),
-                IsGpuEnabled = collectors.Contains("gpu"),
-                IsMemoryEnabled = collectors.Contains("memory"),
-                IsStorageEnabled = collectors.Contains("disk"),
-                IsNetworkEnabled = collectors.Contains("network"),
-                IsMotherboardEnabled = collectors.Contains("motherboard"),
-                IsControllerEnabled = true
+                IsCpuEnabled = enabledCollectors.Contains("cpu"),
+                IsGpuEnabled = enabledCollectors.Contains("gpu"),
+                IsMemoryEnabled = enabledCollectors.Contains("memory"),
+                IsMotherboardEnabled = enabledCollectors.Contains("motherboard"),
+                IsStorageEnabled = enabledCollectors.Contains("storage"),
+                IsNetworkEnabled = enabledCollectors.Contains("network"),
+                IsBatteryEnabled = enabledCollectors.Contains("battery"),
             };
 
             computer.Open();
 
-            computer.Accept(new UpdateVisitor());
+            CachedMetrics metrics = new CachedMetrics(computer, TimeSpan.FromSeconds(config.CollectInterval));
 
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                Console.WriteLine("Hardware: {0}", hardware.Name);
-                
-                foreach (IHardware subhardware in hardware.SubHardware)
-                {
-                    Console.WriteLine("\tSubhardware: {0}", subhardware.Name);
-                    
-                    foreach (ISensor sensor in subhardware.Sensors)
-                    {
-                        Console.WriteLine("\t\tSensor: {0}, value: {1}, identifier: {2}, type: {3}", sensor.Name, sensor.Value, sensor.Identifier, sensor.SensorType);
-                    }
-                }
-
-                foreach (ISensor sensor in hardware.Sensors)
-                {
-                    Console.WriteLine("\tSensor: {0}, value: {1}, identifier: {2}, type: {3}", sensor.Name, sensor.Value, sensor.Identifier, sensor.SensorType);
-                }
+            if (config.Service == true && OperatingSystem.IsWindows())
+            { 
+                ServiceBase.Run(new Service(config, metrics));
+                return;
             }
-            
-            computer.Close();
+
+            await RunConsoleAsync(config, metrics);
+        }
+
+        private static async Task RunConsoleAsync(Config config, CachedMetrics metrics)
+        {
+            using CancellationTokenSource cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (_, e) =>
+            {
+                e.Cancel = true;
+                cts.Cancel();
+            };
+
+            ExporterHost host = new ExporterHost(config, metrics);
+            await host.RunAsync(cts.Token);
         }
     }
 }
