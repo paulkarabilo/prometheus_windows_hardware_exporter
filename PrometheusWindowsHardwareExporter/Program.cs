@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using System.ServiceProcess;
 using LibreHardwareMonitor.Hardware;
+using LibreHardwareMonitor.PawnIo;
 using PrometheusWindowsHardwareExporter;
 
 namespace PrometheusWindowsHardwareExporter
@@ -25,7 +28,19 @@ namespace PrometheusWindowsHardwareExporter
                 IsStorageEnabled = enabledCollectors.Contains("storage"),
                 IsNetworkEnabled = enabledCollectors.Contains("network"),
                 IsBatteryEnabled = enabledCollectors.Contains("battery"),
+                IsPsuEnabled = enabledCollectors.Contains("psu"),
             };
+
+            if (!PawnIo.IsInstalled || PawnIo.Version < new Version(2, 0, 0, 0))
+            {
+                Console.WriteLine("Warning: PawnIo driver is not installed or is outdated. Some hardware monitoring features may not work correctly.");
+                Console.WriteLine("Go to https://pawnio.eu/ to get the latest version");
+            }
+
+            if (!IsElevated())
+            {
+                Console.WriteLine("Warning: Running in non-administrator role may result in some metrics being not available!");
+            }
 
             computer.Open();
 
@@ -51,6 +66,12 @@ namespace PrometheusWindowsHardwareExporter
 
             ExporterHost host = new ExporterHost(config, metrics);
             await host.RunAsync(cts.Token);
+        }
+
+        private static bool IsElevated()
+        {
+            WindowsPrincipal p = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            return p.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

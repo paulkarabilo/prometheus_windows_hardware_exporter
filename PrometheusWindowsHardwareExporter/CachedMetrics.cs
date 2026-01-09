@@ -72,14 +72,18 @@ namespace PrometheusWindowsHardwareExporter
             foreach (ISensor sensor in hw.Sensors)
             {
                 Console.WriteLine($"Hardware: {hw.Name} Sensor: {sensor.Name} Type: {sensor.SensorType} Value: {sensor.Value}");
-                if (sensor.SensorType == SensorType.Temperature && sensor.Value != null && sensor.Value.HasValue)
+                if (sensor.Value != null && sensor.Value.HasValue)
                 {
                     string name = sensor.Name.Replace(' ', '_').ToLowerInvariant();
-                    sb.Append("prometheus_windows_hardware_exporter_temperature{")
+                    sb.Append("prometheus_windows_hardware{")
                         .Append("hardware=\"")
                         .Append(SanitizeLabelValue(hw.Name))
+                        .Append("\",hardware_type=\"")
+                        .Append(SanitizeLabelValue(hw.HardwareType.ToString()))
                         .Append("\",sensor=\"")
                         .Append(SanitizeLabelValue(name))
+                        .Append("\",sensor_type=\"")
+                        .Append(SanitizeLabelValue(sensor.SensorType.ToString()))
                         .Append("\"} ")
                         .Append(sensor.Value.Value.ToString())
                         .Append("\n");

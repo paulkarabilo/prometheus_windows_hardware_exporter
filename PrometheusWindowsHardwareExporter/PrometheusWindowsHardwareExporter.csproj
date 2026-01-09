@@ -13,6 +13,7 @@
 
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>

@@ -17,8 +17,11 @@ namespace PrometheusWindowsHardwareExporter
             "cpu",
             "gpu",
             "memory",
-            "disk",
-            "motherboard"
+            "motherboard",
+            "storage",
+            "psu",
+            "battery",
+            "network"
         };
 
         [JsonPropertyName("service")]
