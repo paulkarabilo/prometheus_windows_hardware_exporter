@@ -2,3 +2,5 @@ Build
 PrometheusWindowsHardwareExporter/bin
 PrometheusWindowsHardwareExporter/obj
 .vs
+Installer/bin
+Installer/obj
