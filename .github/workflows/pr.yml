@@ -25,11 +25,11 @@ jobs:
         
       - name: Restore dependencies
         shell: pwsh
-        run: dotnet restore ./PrometheusWindowsHardwareExporter.sln
+        run: dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
 
       - name: Build solution
         shell: pwsh
-        run: dotnet build ./PrometheusWindowsHardwareExporter.sln --no-restore --configuration Release
+        run: dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --configuration Release
 
       - name: Publish win-x64
         shell: pwsh
