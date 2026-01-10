@@ -1,0 +1,81 @@
+name: PR
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up DOTNET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          cache: 'true'
+        
+      - name: Restore dependencies
+        shell: pwsh
+        run: dotnet restore ./PrometheusWindowsHardwareExporter.sln
+
+      - name: Build solution
+        shell: pwsh
+        run: dotnet build ./PrometheusWindowsHardwareExporter.sln --no-restore --configuration Release
+
+      - name: Publish win-x64
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
+          New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
+          dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj `
+            --no-build `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -o $publishDir
+
+      - name: Restore Wix tool
+        shell: pwsh
+        run: dotnet tool restore
+
+      - name: Build MSI installer
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
+          $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
+          $version = "0.0.0-pr-${{ github.event.pull_request.number }}-${{ github.run_number }}-${{ github.sha }}"
+          dotnet wix build ./Installer/Installer.wixproj `
+            -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") `
+            -d PublishDir=$publishDir `
+            -d Version="$version"
+          
+      - name: Create ZIP
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
+          $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Path $zipOutputDir -Force | Out-Null
+          $zipPath = Join-Path $zipOutputDir "PrometheusWindowsHardwareExporter-win-x64.zip"
+          if (Test-Path $zipPath) {
+            Remove-Item $zipPath
+          }
+          Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrometheusWindowsHardwareExporter-PR-Artifacts
+          path: |
+            artifacts/PrometheusWindowsHardwareExporter.msi
+            artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
