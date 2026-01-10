@@ -29,7 +29,7 @@ jobs:
 
       - name: Build solution
         shell: pwsh
-        run: dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --configuration Release
+        run: dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --configuration Release -r win-x64
 
       - name: Publish win-x64
         shell: pwsh
