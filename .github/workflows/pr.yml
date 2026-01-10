@@ -48,7 +48,7 @@ jobs:
           $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
           $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
           New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
-          $version = "0.0.0-pr_${{ github.event.pull_request.number }}_${{ github.run_number }}_${{ github.sha }}.0"
+          $version = "0.0.1.${{ github.run_number }}"
           dotnet tool run wix build ./Installer/Package.wxs -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -define PublishDir=$publishDir -define Version="$version"
 
       - name: Create ZIP
