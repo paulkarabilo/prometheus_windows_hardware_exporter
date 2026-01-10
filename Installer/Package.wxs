@@ -4,7 +4,7 @@
 <?define Name = "PrometheusWindowsHardwareExporter" ?>
 <?define Manufacturer = "Karabilo" ?>
 <?define Version = "0.0.1.0" ?>
-<?define PublishDir = "$(var.PrometheusWindowsHardwareExporter.TargetDir)publish" ?>
+<?define PublishDir = "..\PrometheusWindowsHardwareExporter\bin\Release\net8.0\publish" ?>
 <?define UpgradeCode = "9ED3FF33-8718-444E-B44B-69A2344B7E98" ?>
 
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
@@ -32,7 +32,7 @@
             <Component Id="ServiceExecutable" Bitness="always64">
 
                 <File Id="$(Name).exe"
-                      Source="$(var.PublishDir)\$(Name).exe"
+                      Source="$(PublishDir)\$(Name).exe"
                       KeyPath="true" />
 
                 <!-- Remove all files from the INSTALLFOLDER on uninstall -->
