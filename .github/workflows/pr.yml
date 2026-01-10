@@ -36,12 +36,7 @@ jobs:
         run: |
           $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
           New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
-          dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj `
-            --no-build `
-            -c Release `
-            -r win-x64 `
-            --self-contained true `
-            -o $publishDir
+          dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-build -c Release -r win-x64 --self-contained true -o $publishDir
 
       - name: Restore Wix tool
         shell: pwsh
@@ -54,11 +49,8 @@ jobs:
           $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
           New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
           $version = "0.0.0-pr-${{ github.event.pull_request.number }}-${{ github.run_number }}-${{ github.sha }}"
-          dotnet wix build ./Installer/Installer.wixproj `
-            -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") `
-            -d PublishDir=$publishDir `
-            -d Version="$version"
-          
+          dotnet wix build ./Installer/Installer.wixproj -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -d PublishDir=$publishDir -d Version="$version"
+
       - name: Create ZIP
         shell: pwsh
         run: |
@@ -66,9 +58,7 @@ jobs:
           $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
           New-Item -ItemType Directory -Path $zipOutputDir -Force | Out-Null
           $zipPath = Join-Path $zipOutputDir "PrometheusWindowsHardwareExporter-win-x64.zip"
-          if (Test-Path $zipPath) {
-            Remove-Item $zipPath
-          }
+          if (Test-Path $zipPath) { Remove-Item $zipPath }
           Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath
 
       - name: Upload artifacts
