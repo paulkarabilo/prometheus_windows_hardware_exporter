@@ -4,7 +4,7 @@
 <?define Name = "PrometheusWindowsHardwareExporter" ?>
 <?define Manufacturer = "Karabilo" ?>
 
-<?define Version = "$(Version)?"?>
+<?define Version = "$(Version)"?>
 <?if "$(Version)" = "" ?>
 <?define Version = "0.0.1.0" ?>
 <?endif ?>
