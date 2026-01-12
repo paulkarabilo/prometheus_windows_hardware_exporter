@@ -70,8 +70,12 @@ namespace PrometheusWindowsHardwareExporter
 
         private static bool IsElevated()
         {
+#if WINDOWS
             WindowsPrincipal p = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             return p.IsInRole(WindowsBuiltInRole.Administrator);
+#else
+            return false;
+#endif
         }
     }
 }
