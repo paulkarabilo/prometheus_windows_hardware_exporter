@@ -17,7 +17,7 @@ jobs:
 
       - name: Get commit sha for tag
         id: get_sha
-        run: echo "sha=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+        run: echo "sha=$(git rev-list -n 1 ${{ github.event.release.tag_name }})" >> $GITHUB_OUTPUT
 
       - name: Get run-id for build workflow for the commit sha
         id: get_run_id
