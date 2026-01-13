@@ -24,7 +24,7 @@ jobs:
         run: |
           $workflowName = "build"
           $commitSha = "${{ steps.get_sha.outputs.sha }}"
-          $runs = gh run list --workflow "$workflowName" --branch main --json databaseId,headSha --jq ".[] | select(.headSha==\"$commitSha\") | .databaseId"
+          $runs = gh run list -w "$workflowName" --json databaseId,headSha --jq ".[] | select(.headSha==$commitSha) | .databaseId"
           if ($runs.Count -eq 0) {
               Write-Error "No workflow runs found for commit SHA $commitSha"
               exit 1
