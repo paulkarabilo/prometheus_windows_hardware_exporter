@@ -30,7 +30,8 @@ jobs:
               exit 1
           }
           else {
-              Write-Output "run_id=${runs[0]}" >> $GITHUB_OUTPUT
+              Write-Output "Got run ID: $runs[0]"
+              "run_id=${runs[0]}" >> $env:GITHUB_OUTPUT
           }
       
       - name: Fetch artifacts from build workflow
@@ -52,7 +53,7 @@ jobs:
   build:
     runs-on: windows-latest
     needs: get-build-artifacts
-    if: needs.get-build-artifacts.result != 'success'
+    if: ${{ failure() &&  needs.get-build-artifacts.result == 'failure' }}
     
     steps:
       - name: Checkout repository
