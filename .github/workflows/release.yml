@@ -1,0 +1,135 @@
+name: Tag And Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  get-build-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Get commit sha for tag
+        id: get_sha
+        run: echo "::set-output name=sha::$(git rev-list -n 1 ${{ github.event.release.tag_name }})"
+
+      - name: Get run-id for build workflow for the commit sha
+        id: get_run_id
+        shell: pwsh
+        run: |
+          $workflowName = "build"
+          $commitSha = "${{ steps.get_sha.outputs.sha }}"
+          $runs = gh run list --workflow "$workflowName" --branch main --json databaseId,headSha --jq ".[] | select(.headSha==\"$commitSha\") | .databaseId"
+          if ($runs.Count -eq 0) {
+              Write-Error "No workflow runs found for commit SHA $commitSha"
+              exit 1
+          }
+          elseif ($runs.Count -gt 1) {
+              Write-Error "Multiple workflow runs found for commit SHA $commitSha"
+              exit 1
+          }
+          else {
+              Write-Output "::set-output name=run_id::${runs[0]}"
+          }
+        continue-on-error: true
+      
+      - name: Fetch artifacts from build workflow
+        uses: actions/download-artifact@v5
+        if: steps.get_run_id.outcome == 'success'
+        with:
+          workflow: build
+          run-id: ${{ steps.get_run_id.outputs.run_id }}
+          name: PrometheusWindowsHardwareExporter-Artifacts
+        continue-on-error: true
+
+      - name: Upload fetched artifacts
+        if: steps.get_run_id.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrometheusWindowsHardwareExporter-Release-Artifacts
+          path: |
+            artifacts/PrometheusWindowsHardwareExporter.msi
+            artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
+
+  build:
+    runs-on: windows-latest
+    needs: get-build-artifacts
+    if: needs.get-build-artifacts.result != 'success'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up DOTNET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+        
+      - name: Restore dependencies
+        shell: pwsh
+        run: dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
+
+      - name: Build solution
+        shell: pwsh
+        run: dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --configuration Release -r win-x64
+
+      - name: Publish win-x64
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
+          New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
+          dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-build -c Release -r win-x64 --self-contained true -o $publishDir
+
+      - name: Restore Wix tool
+        shell: pwsh
+        run: dotnet tool restore
+
+      - name: Build MSI installer
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
+          $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
+          $version = "${{ github.ref_name }}"
+          dotnet tool run wix build ./Installer/Package.wxs -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -define PublishDir=$publishDir -define Version="$version"
+
+      - name: Create ZIP
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
+          $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Path $zipOutputDir -Force | Out-Null
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrometheusWindowsHardwareExporter-Release-Artifacts
+          path: |
+            artifacts/PrometheusWindowsHardwareExporter.msi
+            artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
+
+  release:
+    runs-on: windows-latest
+    needs: [get-build-artifacts, build]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: PrometheusWindowsHardwareExporter-Release-Artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            artifacts/PrometheusWindowsHardwareExporter.msi
+            artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

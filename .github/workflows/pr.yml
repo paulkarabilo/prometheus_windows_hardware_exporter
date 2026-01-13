@@ -64,7 +64,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: PrometheusWindowsHardwareExporter-PR-Artifacts
+          name: PrometheusWindowsHardwareExporter-Artifacts
           path: |
             artifacts/PrometheusWindowsHardwareExporter.msi
             artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
