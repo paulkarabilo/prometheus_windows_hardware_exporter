@@ -29,9 +29,10 @@ jobs:
               Write-Error "Multiple workflow runs found for commit SHA $env:GITHUB_SHA"
               exit 1
           }
+          
           else {
-              Write-Output "Got run ID: $runs[0]"
-              "run_id=${runs[0]}" >> $env:GITHUB_OUTPUT
+              Write-Output "Got run ID: $runs"
+              "run_id=$runs" >> $env:GITHUB_OUTPUT
           }
 
       - name: Debug Output run ID
