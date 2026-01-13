@@ -43,7 +43,6 @@ jobs:
         if: steps.get_run_id.outcome == 'success'
         with:
           run-id: ${{ steps.get_run_id.outputs.run_id }}
-          name: PrometheusWindowsHardwareExporter-Artifacts
 
       - name: Upload fetched artifacts
         if: steps.get_run_id.outcome == 'success'
