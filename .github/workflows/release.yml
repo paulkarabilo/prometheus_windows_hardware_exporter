@@ -20,19 +20,18 @@ jobs:
         shell: pwsh
         run: |
           $workflowName = "PR"
-          $runs = gh run list -w "$workflowName" -c $env::GITHUB_SHA --json databaseId,updatedAt --jq 'sort_by(.updatedAt) | .[] | .databaseId' --repo ${{ github.repository }}
+          $runs = gh run list -w "$workflowName" -c $env:GITHUB_SHA --json databaseId,updatedAt --jq 'sort_by(.updatedAt) | .[] | .databaseId' --repo ${{ github.repository }}
           if ($runs.Count -eq 0) {
-              Write-Error "No workflow runs found for commit SHA $env::GITHUB_SHA"
+              Write-Error "No workflow runs found for commit SHA $env:GITHUB_SHA"
               exit 1
           }
           elseif ($runs.Count -gt 1) {
-              Write-Error "Multiple workflow runs found for commit SHA $env::GITHUB_SHA"
+              Write-Error "Multiple workflow runs found for commit SHA $env:GITHUB_SHA"
               exit 1
           }
           else {
               Write-Output "run_id=${runs[0]}" >> $GITHUB_OUTPUT
           }
-        continue-on-error: true
       
       - name: Fetch artifacts from build workflow
         uses: actions/download-artifact@v4
@@ -40,7 +39,6 @@ jobs:
         with:
           run-id: ${{ steps.get_run_id.outputs.run_id }}
           name: PrometheusWindowsHardwareExporter-Artifacts
-        continue-on-error: true
 
       - name: Upload fetched artifacts
         if: steps.get_run_id.outcome == 'success'
