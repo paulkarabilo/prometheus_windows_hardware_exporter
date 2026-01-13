@@ -43,6 +43,9 @@ jobs:
         if: steps.get_run_id.outcome == 'success'
         with:
           run-id: ${{ steps.get_run_id.outputs.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          name: PrometheusWindowsHardwareExporter-Artifacts
+          path: artifacts/
 
       - name: Upload fetched artifacts
         if: steps.get_run_id.outcome == 'success'
