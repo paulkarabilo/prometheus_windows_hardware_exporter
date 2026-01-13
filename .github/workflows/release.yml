@@ -17,7 +17,7 @@ jobs:
 
       - name: Get commit sha for tag
         id: get_sha
-        run: echo "::set-output name=sha::$(git rev-list -n 1 ${{ github.event.release.tag_name }})"
+        run: echo "sha=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
 
       - name: Get run-id for build workflow for the commit sha
         id: get_run_id
@@ -35,15 +35,14 @@ jobs:
               exit 1
           }
           else {
-              Write-Output "::set-output name=run_id::${runs[0]}"
+              echo "run_id=${runs[0]}" >> $GITHUB_OUTPUT
           }
         continue-on-error: true
       
       - name: Fetch artifacts from build workflow
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         if: steps.get_run_id.outcome == 'success'
         with:
-          workflow: build
           run-id: ${{ steps.get_run_id.outputs.run_id }}
           name: PrometheusWindowsHardwareExporter-Artifacts
         continue-on-error: true
@@ -121,7 +120,7 @@ jobs:
     needs: [get-build-artifacts, build]
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         with:
           name: PrometheusWindowsHardwareExporter-Release-Artifacts
 
