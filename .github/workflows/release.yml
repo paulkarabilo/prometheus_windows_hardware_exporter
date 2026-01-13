@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  get-build-artifacts:
+  release:
     runs-on: windows-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -17,6 +17,7 @@ jobs:
 
       - name: Get run-id for build workflow for the commit sha
         id: get_run_id
+        continue-on-error: true
         shell: pwsh
         run: |
           $workflowName = "PR"
@@ -35,45 +36,25 @@ jobs:
               "run_id=$runs" >> $env:GITHUB_OUTPUT
           }
 
-      - name: Debug Output run ID
-        run: Write-Output "Run ID is ${{ steps.get_run_id.outputs.run_id }}"
-      
       - name: Fetch artifacts from build workflow
         uses: actions/download-artifact@v4
         if: steps.get_run_id.outcome == 'success'
+        id: download_artifacts
         with:
           run-id: ${{ steps.get_run_id.outputs.run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           name: PrometheusWindowsHardwareExporter-Artifacts
           path: artifacts/
 
-      - name: Upload fetched artifacts
-        if: steps.get_run_id.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: PrometheusWindowsHardwareExporter-Release-Artifacts
-          path: |
-            artifacts/PrometheusWindowsHardwareExporter.msi
-            artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
-
-  build:
-    runs-on: windows-latest
-    needs: get-build-artifacts
-    if: ${{ failure() && needs.get-build-artifacts.result == 'failure' }}
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-        with:
-          submodules: recursive
-
       - name: Set up DOTNET
         uses: actions/setup-dotnet@v4
+        if: steps.get_run_id.outcome != 'success' || steps.download_artifacts.outcome != 'success'
         with:
           dotnet-version: '8.0.x'
         
       - name: Build and package
         shell: pwsh
+        if: steps.get_run_id.outcome != 'success' || steps.download_artifacts.outcome != 'success'
         run: |
           dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
           dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --configuration Release -r win-x64
@@ -93,24 +74,9 @@ jobs:
           $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
           $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
           New-Item -ItemType Directory -Path $zipOutputDir -Force | Out-Null
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: PrometheusWindowsHardwareExporter-Release-Artifacts
-          path: |
-            artifacts/PrometheusWindowsHardwareExporter.msi
-            artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
-
-  release:
-    runs-on: windows-latest
-    needs: [get-build-artifacts, build]
-    if: ${{ always() && (needs.get-build-artifacts.result == 'success' || needs.build.result == 'success') }}
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: PrometheusWindowsHardwareExporter-Release-Artifacts
+          $zipPath = Join-Path $zipOutputDir "PrometheusWindowsHardwareExporter-win-x64.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath }
+          Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
