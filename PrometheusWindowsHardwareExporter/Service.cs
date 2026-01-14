@@ -19,9 +19,11 @@ namespace PrometheusWindowsHardwareExporter
         {
             _config = config;
             _metrics = metrics;
+#if WINDOWS
             ServiceName = "PrometheusWindowsHardwareExporter";
             CanStop = true;
             AutoLog = true;
+#endif
         }
 
         protected override void OnStart(string[] args)
@@ -33,9 +35,9 @@ namespace PrometheusWindowsHardwareExporter
 
         protected override void OnStop()
         {
-            try { _cts.Cancel(); } catch { }
+            try { _cts?.Cancel(); } catch { }
             try { _task?.Wait(TimeSpan.FromSeconds(10)); } catch { }
-            try { _host.Dispose(); } catch { }
+            try { _host?.Dispose(); } catch { }
         }
     }
 }

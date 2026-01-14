@@ -15,10 +15,7 @@ namespace PrometheusWindowsHardwareExporter
                     if (File.Exists(configPath))
                     {
                         string json = File.ReadAllText(configPath);
-                        config = System.Text.Json.JsonSerializer.Deserialize<Config>(json, new System.Text.Json.JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        }) ?? config;
+                        config = System.Text.Json.JsonSerializer.Deserialize<Config>(json, ConfigGenerationContext.Default.Config) ?? config;
                     }
                 }
 

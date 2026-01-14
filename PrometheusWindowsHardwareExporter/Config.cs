@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace PrometheusWindowsHardwareExporter
@@ -34,5 +35,12 @@ namespace PrometheusWindowsHardwareExporter
 
         [JsonPropertyName("request_timeout")]
         public TimeSpan? RequestTimeout { get; internal set; } = TimeSpan.FromSeconds(10);
+    }
+
+    [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
+    [JsonSerializable(typeof(Config))]
+    [JsonSerializable(typeof(JsonElement))]
+    internal partial class ConfigGenerationContext : JsonSerializerContext
+    {
     }
 }
