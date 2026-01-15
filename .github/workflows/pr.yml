@@ -27,7 +27,7 @@ jobs:
         shell: pwsh
         run: |
           dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
-          dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --configuration Release -r win-x64
+          dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore -c Release -r win-x64
 
           $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
           New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
