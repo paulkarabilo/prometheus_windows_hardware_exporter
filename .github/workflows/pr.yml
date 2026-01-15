@@ -13,6 +13,20 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/PrometheusWindowsHardwareExporter.csproj') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Cache dotnet tools
+        uses: actions/cache@v3
+        with:
+          path: ~/.dotnet/tools
+          key: ${{ runner.os }}-dotnet-tools-${{ hashFiles('**/dotnet-tools.json') }}
+          restore-keys: ${{ runner.os }}-dotnet-tools-
+
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
