@@ -21,27 +21,10 @@ jobs:
       - name: Build and package
         shell: pwsh
         run: |
-          dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
-          dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj -c Release -r win-x64 --no-restore
-
-          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
-          New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
-          dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --no-build -c Release -r win-x64 --self-contained true -o $publishDir
-
-          $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
-          New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
-          $version = "0.0.1.${{ github.run_number }}"
-
-          dotnet tool restore
-          dotnet tool run wix build ./Installer/Package.wxs -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -define PublishDir=$publishDir -define Version="$version"
-
-          if ("${{ github.event_name }}" -eq "push" -and "${{ github.ref }}" -eq "refs/heads/main") {
-            $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
-            New-Item -ItemType Directory -Path $zipOutputDir -Force | Out-Null
-            $zipPath = Join-Path $zipOutputDir "PrometheusWindowsHardwareExporter-win-x64.zip"
-            if (Test-Path $zipPath) { Remove-Item $zipPath }
-            Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath
-          }
+          .\Scripts\ci_build.ps1 -publishDir $(Join-Path $env:GITHUB_WORKSPACE "publish") `
+            -artifactsDir $(Join-Path $env:GITHUB_WORKSPACE "artifacts") `
+            -version "0.0.1.${{ github.run_number }}" `
+            -pack $(${{ github.event_name }} -eq 'push' -and ${{ github.ref }} -eq 'refs/heads/main')
 
       - name: Upload artifacts
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
