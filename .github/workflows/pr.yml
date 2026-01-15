@@ -24,7 +24,7 @@ jobs:
           .\Scripts\ci_build.ps1 -publishDir $(Join-Path $env:GITHUB_WORKSPACE "publish") `
             -artifactsDir $(Join-Path $env:GITHUB_WORKSPACE "artifacts") `
             -version "0.0.1.${{ github.run_number }}" `
-            -pack $(${{ github.event_name }} -eq 'push' -and ${{ github.ref }} -eq 'refs/heads/main')
+            -pack $("${{ github.event_name }}" -eq 'push' -and "${{ github.ref }}" -eq 'refs/heads/main')
 
       - name: Upload artifacts
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
