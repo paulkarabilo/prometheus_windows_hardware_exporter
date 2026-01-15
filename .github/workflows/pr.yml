@@ -30,7 +30,9 @@ jobs:
           $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
           New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
           $version = "0.0.1.${{ github.run_number }}"
-          dotnet wix build ./Installer/Package.wxs -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -define PublishDir=$publishDir -define Version="$version"
+
+          dotnet tool restore
+          dotnet tool wix build ./Installer/Package.wxs -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -define PublishDir=$publishDir -define Version="$version"
 
           if ("${{ github.event_name }}" -eq "push" -and "${{ github.ref }}" -eq "refs/heads/main") {
             $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
