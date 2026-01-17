@@ -6,7 +6,6 @@ param(
     [bool]$pack = $false
 )
 
-
 dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
 dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj -c $Configuration -r win-x64 --no-restore
 

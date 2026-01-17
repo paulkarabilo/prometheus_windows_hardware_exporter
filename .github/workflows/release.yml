@@ -46,35 +46,14 @@ jobs:
           name: PrometheusWindowsHardwareExporter-Artifacts
           path: artifacts/
 
-      - name: Set up DOTNET
-        uses: actions/setup-dotnet@v4
-        if: steps.get_run_id.outcome != 'success' || steps.download_artifacts.outcome != 'success'
-        with:
-          dotnet-version: '8.0.x'
-        
       - name: Build and package
         shell: pwsh
         if: steps.get_run_id.outcome != 'success' || steps.download_artifacts.outcome != 'success'
         run: |
-          dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
-          dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore -c Release -r win-x64
-
-          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\win-x64"
-          New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
-          dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-build -c Release -r win-x64 --self-contained true -o $publishDir
-
-          dotnet tool restore
-
-          $msiOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
-          New-Item -ItemType Directory -Path $msiOutputDir -Force | Out-Null
-          $version = "${{ github.ref_name }}"
-          dotnet tool run wix build ./Installer/Package.wxs -o (Join-Path $msiOutputDir "PrometheusWindowsHardwareExporter.msi") -define PublishDir=$publishDir -define Version="$version"
-
-          $zipOutputDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
-          New-Item -ItemType Directory -Path $zipOutputDir -Force | Out-Null
-          $zipPath = Join-Path $zipOutputDir "PrometheusWindowsHardwareExporter-win-x64.zip"
-          if (Test-Path $zipPath) { Remove-Item $zipPath }
-          Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath
+          .\Scripts\ci_build.ps1 -publishDir $(Join-Path $env:GITHUB_WORKSPACE "publish") `
+            -artifactsDir $(Join-Path $env:GITHUB_WORKSPACE "artifacts") `
+            -version "${{ github.ref_name }}" `
+            -pack $true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
