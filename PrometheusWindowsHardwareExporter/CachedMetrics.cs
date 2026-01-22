@@ -49,7 +49,7 @@ namespace PrometheusWindowsHardwareExporter
                 _computer.Accept(_visitor);
 
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_up gauge\nprometheus_windows_hardware_exporter_up gauge 1");
+                sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_up gauge\nprometheus_windows_hardware_exporter_up 1");
                 sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_temperature gauge");
 
                 foreach (IHardware hw in _computer.Hardware)
