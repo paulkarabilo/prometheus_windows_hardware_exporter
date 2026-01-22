@@ -54,7 +54,7 @@ namespace PrometheusWindowsHardwareExporter
 
                 foreach (IHardware hw in _computer.Hardware)
                     EmitTemps(sb, hw);
-                return sb.ToString();
+                return sb.ToString().Replace("\r\n", "\n");
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace PrometheusWindowsHardwareExporter
                 sb.AppendLine("prometheus_windows_hardware_exporter_up 0");
                 sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_error_info gauge");
                 sb.AppendLine($"prometheus_windows_hardware_exporter_error_info{{error=\"{ex.Message.Replace("\"", "\\\"")}\"}} 1");
-                return sb.ToString();
+                return sb.ToString().Replace("\r\n", "\n");
             }
         }
 
