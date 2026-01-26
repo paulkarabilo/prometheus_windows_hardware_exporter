@@ -15,9 +15,13 @@ Prometheus Windows Hardware Exporter is a .NET application that monitors Windows
 - **Customizable metrics endpoint**: Configure listening address and metrics path
 - **Hardware-aware**: Detects missing or outdated drivers (e.g., PawnIo driver)
 
+## Metrics
+
+The hardware exporter provides a single gauge metric called `prometheus_windows_hardware` with the following labels: `hardware` (e.g. `Intel Core i7-7700`, `hardware_type` (e.g. `Cpu, NvidiaGpu`, `Storage` etc), `sensor` (e.g. `cpu_core_max`, `data_read`, etc) and `sensor_type` (e.g. `Temperature`, `Clock`, `Load`, etc). The values of the labels are provided directly by LibreHaedwareMonitor library
+
 ## Installation
 
-### From GitLab Releases
+### From Github Releases
 
 1. Download the latest release from the [Github Releases page](https://github.com/paulkarabilo/prometheus_windows_hardware_exporter/releases)
 2. Extract the archive to your desired location
@@ -144,7 +148,7 @@ dotnet build PrometheusWindowsHardwareExporter.sln
 
 ## Support & Issues
 
-For bug reports, feature requests, or other issues, please visit the project's GitLab repository.
+For bug reports, feature requests, or other issues, please visit the project's Github repository.
 
 ---
 
