@@ -17,7 +17,7 @@ Prometheus Windows Hardware Exporter is a .NET application that monitors Windows
 
 ## Metrics
 
-The hardware exporter provides a single gauge metric called `prometheus_windows_hardware` with the following labels: `hardware` (e.g. `Intel Core i7-7700`, `hardware_type` (e.g. `Cpu, NvidiaGpu`, `Storage` etc), `sensor` (e.g. `cpu_core_max`, `data_read`, etc) and `sensor_type` (e.g. `Temperature`, `Clock`, `Load`, etc). The values of the labels are provided directly by LibreHaedwareMonitor library
+The hardware exporter provides a single gauge metric called `prometheus_windows_hardware` with the following labels: `hardware` (e.g. `Intel Core i7-7700`, `hardware_type` (e.g. `Cpu, NvidiaGpu`, `Storage` etc), `sensor` (e.g. `cpu_core_max`, `data_read`, etc) and `sensor_type` (e.g. `Temperature`, `Clock`, `Load`, etc). The values of the labels are provided directly by [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) library
 
 ## Installation
 
