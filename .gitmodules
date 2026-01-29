@@ -1,3 +1,0 @@
-[submodule "ext/LibreHardwareMonitor"]
-	path = ext/LibreHardwareMonitor
-	url = https://github.com/LibreHardwareMonitor/LibreHardwareMonitor.git
