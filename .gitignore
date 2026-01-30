@@ -1,6 +1,8 @@
 Build
 PrometheusWindowsHardwareExporter/bin
 PrometheusWindowsHardwareExporter/obj
+PrometheusWindowsHardwareExporter.Tests/bin
+PrometheusWindowsHardwareExporter.Tests/obj
 .vs
 Installer/bin
 Installer/obj
