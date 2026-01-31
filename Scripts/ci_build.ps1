@@ -3,11 +3,19 @@ param(
     [string]$publishDir = "",
     [string]$artifactsDir = "",
     [string]$version = "0.0.0.0",
-    [bool]$pack = $false
+    [bool]$pack = $false,
+    [bool]$test = $true
 )
 
 dotnet restore ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj
 dotnet build ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj -c $Configuration -r win-x64 --no-restore
+
+if ($test) {
+    New-Item -ItemType Directory -Path (Join-Path $artifactsDir "TestResults") -Force | Out-Null
+    dotnet restore ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj
+    dotnet build ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c $Configuration --no-restore
+    dotnet test ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c $Configuration --no-build --logger "trx;LogFileName=TestResults.trx" --results-directory $(Join-Path $artifactsDir "TestResults")
+}
 
 New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
 dotnet publish ./PrometheusWindowsHardwareExporter/PrometheusWindowsHardwareExporter.csproj --no-restore --no-build -c $Configuration -r win-x64 --self-contained true -o $publishDir

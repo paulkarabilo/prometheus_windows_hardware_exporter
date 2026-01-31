@@ -35,3 +35,11 @@ jobs:
           path: |
             artifacts/PrometheusWindowsHardwareExporter.msi
             artifacts/PrometheusWindowsHardwareExporter-win-x64.zip
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}       # run this step even if previous step failed
+        with:
+          name: xunit-report
+          path: artifacts/TestResults/*.trx
+          reporter: dotnet-trx

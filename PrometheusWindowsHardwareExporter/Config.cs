@@ -40,7 +40,7 @@ namespace PrometheusWindowsHardwareExporter
     [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
     [JsonSerializable(typeof(Config))]
     [JsonSerializable(typeof(JsonElement))]
-    internal partial class ConfigGenerationContext : JsonSerializerContext
+    public partial class ConfigGenerationContext : JsonSerializerContext
     {
     }
 }
