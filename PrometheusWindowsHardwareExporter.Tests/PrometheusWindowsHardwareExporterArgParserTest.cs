@@ -8,10 +8,10 @@ public class PrometheusWindowsHardwareExporterRendererTest
     {
         string[] args = Array.Empty<string>();
         var config = PrometheusWindowsHardwareExporter.ArgsParser.ParseArgs(args);
-        Assert.Equal("http://localhost:9182/", config.ListenAddress);
+        Assert.Equal("http://localhost:9182/", config.Web.ListenAddress);
         Assert.Equal(15, config.CollectInterval);
-        Assert.Equal("/metrics", config.MetricsPath);
-        Assert.Equal(new string[] { "cpu", "gpu", "memory", "motherboard", "storage", "psu", "battery", "network" }, config.Collectors);
+        Assert.Equal("/metrics", config.Web.MetricsPath);
+        Assert.Equal(new string[] { "cpu", "gpu", "memory", "motherboard", "storage", "psu", "battery", "network" }, config.Collectors.Enabled);
         Assert.False(config.Service);
         Assert.False(config.ShowHelp);
     }
@@ -19,9 +19,9 @@ public class PrometheusWindowsHardwareExporterRendererTest
     [Fact]
     public void TestCustomListenAddress()
     {
-        string[] args = new string[] { "--listen-address=http://localhost:9090" };
+        string[] args = new string[] { "--web.listen-address=http://localhost:9090" };
         var config = PrometheusWindowsHardwareExporter.ArgsParser.ParseArgs(args);
-        Assert.Equal("http://localhost:9090", config.ListenAddress);
+        Assert.Equal("http://localhost:9090", config.Web.ListenAddress);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class PrometheusWindowsHardwareExporterRendererTest
     {
         string[] args = new string[] { "--metrics-path=/custom-metrics" };
         var config = PrometheusWindowsHardwareExporter.ArgsParser.ParseArgs(args);
-        Assert.Equal("/custom-metrics", config.MetricsPath);
+        Assert.Equal("/custom-metrics", config.Web.MetricsPath);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class PrometheusWindowsHardwareExporterRendererTest
     {
         string[] args = new string[] { "--collectors=cpu,memory" };
         var config = PrometheusWindowsHardwareExporter.ArgsParser.ParseArgs(args);
-        Assert.Equal(new string[] { "cpu", "memory" }, config.Collectors);
+        Assert.Equal(new string[] { "cpu", "memory" }, config.Collectors.Enabled);
     }
 
     [Fact]
@@ -72,23 +72,16 @@ public class PrometheusWindowsHardwareExporterRendererTest
     }
 
     [Fact]
-    public void TestJsonConfigParsing()
+    public void TestYamlConfigParsing()
     {
-        string jsonConfig = @"
-        {
-            ""listen_address"": ""http://localhost:8080"",
-            ""collect_interval"": 20,
-            ""metrics_path"": ""/custom-metrics"",
-            ""collectors"": [""cpu"", ""memory""],
-            ""service"": true
-        }";
 
-        var config = JsonSerializer.Deserialize<PrometheusWindowsHardwareExporter.Config>(jsonConfig, PrometheusWindowsHardwareExporter.ConfigGenerationContext.Default.Config);
+        var args = new string[] { $"--config={Environment.CurrentDirectory}/Resources/test_config.yml" };
+        var config = ArgsParser.ParseArgs(args);
 
-        Assert.Equal("http://localhost:8080", config?.ListenAddress);
+        Assert.Equal("http://localhost:8080", config?.Web.ListenAddress);
         Assert.Equal(20, config?.CollectInterval);
-        Assert.Equal("/custom-metrics", config?.MetricsPath);
-        Assert.Equal(new string[] { "cpu", "memory" }, config?.Collectors);
+        Assert.Equal("/custom-metrics", config?.Web.MetricsPath);
+        Assert.Equal(new string[] { "cpu", "memory" }, config?.Collectors.Enabled);
         Assert.True(config?.Service ?? false);
     }
 }

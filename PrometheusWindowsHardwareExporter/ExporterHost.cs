@@ -16,7 +16,7 @@ namespace PrometheusWindowsHardwareExporter
         {
             _config = config;
             _metrics = metrics;
-            _server = new HttpServer(_config.ListenAddress, _config.MetricsPath, _metrics.GetMetricsText, _config.MaxConcurrent, _config.RequestTimeout);
+            _server = new HttpServer(_config.Web.ListenAddress, _config.Web.MetricsPath, _metrics.GetMetricsText, _config.MaxConcurrent, _config.RequestTimeout);
         }
 
         public async Task RunAsync(CancellationToken cancellationToken)

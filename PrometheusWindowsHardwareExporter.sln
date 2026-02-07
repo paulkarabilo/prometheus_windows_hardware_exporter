@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWindowsHardwareExporter", "PrometheusWindowsHardwareExporter\PrometheusWindowsHardwareExporter.csproj", "{51FEE4CA-D618-46DC-8CA2-A452595DEB56}"
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Installer", "Installer\Installer.wixproj", "{7CB425A4-9969-4533-BA62-5F2826B747EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusWindowsHardwareExporter.Tests", "PrometheusWindowsHardwareExporter.Tests\PrometheusWindowsHardwareExporter.Tests.csproj", "{6463E185-C802-86A7-FA9F-A202609B5527}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,22 @@ Global
 		{7CB425A4-9969-4533-BA62-5F2826B747EE}.Release|x64.Build.0 = Release|x64
 		{7CB425A4-9969-4533-BA62-5F2826B747EE}.Release|x86.ActiveCfg = Release|x86
 		{7CB425A4-9969-4533-BA62-5F2826B747EE}.Release|x86.Build.0 = Release|x86
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|x64.Build.0 = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Debug|x86.Build.0 = Debug|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|ARM64.Build.0 = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|x64.ActiveCfg = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|x64.Build.0 = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|x86.ActiveCfg = Release|Any CPU
+		{6463E185-C802-86A7-FA9F-A202609B5527}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
