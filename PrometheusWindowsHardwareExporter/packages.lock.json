@@ -19,17 +19,17 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.2, )",
-        "resolved": "10.0.2",
-        "contentHash": "sXdDtMf2qcnbygw9OdE535c2lxSxrZP8gO4UhDJ0xiJbl1wIqXS1OTcTDFTIJPOFd6Mhcm8gPEthqWGUxBsTqw=="
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "kICGrGYEzCNI3wPzfEXcwNHgTvlvVn9yJDhSdRK+oZQy4jvYH529u7O0xf5ocQKzOMjfS07+3z9PKRIjrFMJDA=="
       },
       "System.ServiceProcess.ServiceController": {
         "type": "Direct",
-        "requested": "[10.0.2, )",
-        "resolved": "10.0.2",
-        "contentHash": "DQgLDzErB8KZjORot7bUkcq3xhJ2MqpgJUy+jHCsrval0SmRrIkfmu4C0O97KKvPfejSfnV7Ne2LI3qnebxh8w==",
+        "requested": "[10.0.3, )",
+        "resolved": "10.0.3",
+        "contentHash": "lOvEbCrTMl4EB7Ckp1suhgcnUEwUs2qRWLYZvquKU33hpRLZfjTXBSHFWQiRshxqd7dA+Nj9Yiw8EbOwd3T/eQ==",
         "dependencies": {
-          "System.Diagnostics.EventLog": "10.0.2"
+          "System.Diagnostics.EventLog": "10.0.3"
         }
       },
       "YamlDotNet": {
@@ -180,8 +180,8 @@
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
-        "resolved": "10.0.2",
-        "contentHash": "TJPpTLF5MFPobq09c9BQ5X8QuviQfsKvH0Jbm7MkGylGvfIdRqJQLZDPC5sMRFkk9aZhmgir1NJKekip2NxfaA=="
+        "resolved": "10.0.3",
+        "contentHash": "+bZnyzt0/vt4g3QSllhsRNGTpa09p7Juy5K8spcK73cOTOefu4+HoY89hZOgIOmzB5A4hqPyEDKnzra7KKnhZw=="
       },
       "System.IO.FileSystem.AccessControl": {
         "type": "Transitive",
@@ -223,11 +223,11 @@
       },
       "System.ServiceProcess.ServiceController": {
         "type": "Direct",
-        "requested": "[10.0.2, )",
-        "resolved": "10.0.2",
-        "contentHash": "DQgLDzErB8KZjORot7bUkcq3xhJ2MqpgJUy+jHCsrval0SmRrIkfmu4C0O97KKvPfejSfnV7Ne2LI3qnebxh8w==",
+        "requested": "[10.0.3, )",
+        "resolved": "10.0.3",
+        "contentHash": "lOvEbCrTMl4EB7Ckp1suhgcnUEwUs2qRWLYZvquKU33hpRLZfjTXBSHFWQiRshxqd7dA+Nj9Yiw8EbOwd3T/eQ==",
         "dependencies": {
-          "System.Diagnostics.EventLog": "10.0.2"
+          "System.Diagnostics.EventLog": "10.0.3"
         }
       },
       "Mono.Posix.NETStandard": {
@@ -317,8 +317,8 @@
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
-        "resolved": "10.0.2",
-        "contentHash": "TJPpTLF5MFPobq09c9BQ5X8QuviQfsKvH0Jbm7MkGylGvfIdRqJQLZDPC5sMRFkk9aZhmgir1NJKekip2NxfaA=="
+        "resolved": "10.0.3",
+        "contentHash": "+bZnyzt0/vt4g3QSllhsRNGTpa09p7Juy5K8spcK73cOTOefu4+HoY89hZOgIOmzB5A4hqPyEDKnzra7KKnhZw=="
       },
       "System.IO.FileSystem.AccessControl": {
         "type": "Transitive",
