@@ -22,4 +22,10 @@
     <ProjectReference Include="..\PrometheusWindowsHardwareExporter\PrometheusWindowsHardwareExporter.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\test_config.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

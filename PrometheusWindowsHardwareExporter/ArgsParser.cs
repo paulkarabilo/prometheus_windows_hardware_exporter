@@ -1,4 +1,6 @@
 using PrometheusWindowsHardwareExporter;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace PrometheusWindowsHardwareExporter
 {
@@ -14,14 +16,19 @@ namespace PrometheusWindowsHardwareExporter
                     string configPath = a.Substring("--config=".Length);
                     if (File.Exists(configPath))
                     {
-                        string json = File.ReadAllText(configPath);
-                        config = System.Text.Json.JsonSerializer.Deserialize<Config>(json, ConfigGenerationContext.Default.Config) ?? config;
+                        var deserializer = new DeserializerBuilder()
+                            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                            .Build();
+                        var p = deserializer.Deserialize<Config>(File.ReadAllText(configPath));
+                        if (p != null) {
+                            config = p;
+                        }
                     }
                 }
 
-                if (a.StartsWith("--listen-address="))
+                if (a.StartsWith("--web.listen-address="))
                 {
-                    config.ListenAddress = a.Substring("--listen-address=".Length);
+                    config.Web.ListenAddress = a.Substring("--web.listen-address=".Length);
                 }
 
                 if (a.StartsWith("--collect-interval="))
@@ -34,13 +41,13 @@ namespace PrometheusWindowsHardwareExporter
 
                 if (a.StartsWith("--metrics-path="))
                 {
-                    config.MetricsPath = a.Substring("--metrics-path=".Length);
+                    config.Web.MetricsPath = a.Substring("--metrics-path=".Length);
                 }
                 
                 if (a.StartsWith("--collectors="))
                 {
                     string collectors = a.Substring("--collectors=".Length);
-                    config.Collectors = collectors.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    config.Collectors.Enabled = collectors.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 }
 
                 if (a.Equals("--service"))

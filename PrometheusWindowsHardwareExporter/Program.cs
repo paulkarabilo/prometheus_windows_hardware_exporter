@@ -17,7 +17,7 @@ namespace PrometheusWindowsHardwareExporter
             bool runAsService = args.Any(a => a.Equals("--service", StringComparison.OrdinalIgnoreCase));
             Config config = ArgsParser.ParseArgs(args);
 
-            HashSet<string> enabledCollectors = new HashSet<string>(config.Collectors, StringComparer.OrdinalIgnoreCase);
+            HashSet<string> enabledCollectors = new HashSet<string>(config.Collectors.Enabled, StringComparer.OrdinalIgnoreCase);
 
             Computer computer = new Computer
             {

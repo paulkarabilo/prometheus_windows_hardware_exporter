@@ -1,20 +1,19 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
+using YamlDotNet.Serialization;
 namespace PrometheusWindowsHardwareExporter
 {
-    public class Config
+    public class WebConfig
     {
-        [JsonPropertyName("listen_address")]
+        [YamlMember(Alias = "listen-address", ApplyNamingConventions = false )]
         public string ListenAddress { get; set; } = "http://localhost:9182/";
 
-        [JsonPropertyName("collect_interval")]
-        public int CollectInterval { get; set; } = 15;
-        [JsonPropertyName("metrics_path")]
+        [YamlMember(Alias = "metrics-path", ApplyNamingConventions = false)]
         public string MetricsPath { get; set; } = "/metrics";
+    }
 
-        [JsonPropertyName("collectors")]
-        public string[] Collectors {get; set; } = new string[] {
+    public class CollectorsConfig
+    {
+        [YamlMember(Alias = "enabled", ApplyNamingConventions = false)]
+        public string[] Enabled { get; set; } = new string[] {
             "cpu",
             "gpu",
             "memory",
@@ -24,23 +23,35 @@ namespace PrometheusWindowsHardwareExporter
             "battery",
             "network"
         };
+    }
 
-        [JsonPropertyName("service")]
+    public class LogConfig
+    {
+        [YamlMember(Alias = "level", ApplyNamingConventions = false)]
+        public string Level { get; set; } = "info";
+    }
+
+    public class Config
+    {
+        [YamlMember(Alias = "web", ApplyNamingConventions = false)]
+        public WebConfig Web { get; set; } = new WebConfig();
+
+        [YamlMember(Alias = "collect-interval", ApplyNamingConventions = false)]
+        public int CollectInterval { get; set; } = 15;
+
+        [YamlMember(Alias = "collectors", ApplyNamingConventions = false)]
+        public CollectorsConfig Collectors { get; set; } = new CollectorsConfig();
+
+        [YamlMember(Alias = "log", ApplyNamingConventions = false)]
+        public LogConfig Log { get; set; } = new LogConfig();
+
+        [YamlMember(Alias = "service", ApplyNamingConventions = false)]
         public bool Service { get; set; } = false;
 
         public bool ShowHelp { get; set; } = false;
 
-        [JsonPropertyName("max_concurrent")]
         public int MaxConcurrent { get; internal set; } = 10;
 
-        [JsonPropertyName("request_timeout")]
         public TimeSpan? RequestTimeout { get; internal set; } = TimeSpan.FromSeconds(10);
-    }
-
-    [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, WriteIndented = true)]
-    [JsonSerializable(typeof(Config))]
-    [JsonSerializable(typeof(JsonElement))]
-    public partial class ConfigGenerationContext : JsonSerializerContext
-    {
     }
 }
