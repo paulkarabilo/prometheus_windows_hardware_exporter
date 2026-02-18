@@ -9,14 +9,12 @@ on:
       - main
 
 permissions:
-  contents: read
+  id-token: write
+  contents: write
 
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read
-      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
