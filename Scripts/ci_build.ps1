@@ -15,7 +15,7 @@ if ($test) {
     New-Item -ItemType Directory -Path $testResultsDir -Force | Out-Null
     dotnet restore ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj
     dotnet build ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c Debug --no-restore
-    dotnet test ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c Debug --no-build --logger "trx;LogFileName=TestResults.trx" --results-directory $testResultsDir --coverlet
+    dotnet test ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c Debug --no-build --logger "trx;LogFileName=TestResults.trx" --results-directory $testResultsDir --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" 
     dotnet $env:USERPROFILE\.nuget\packages\reportgenerator\5.5.1\tools\net10.0\ReportGenerator.dll -reports:([IO.Path]::Combine($testResultsDir, "**", "coverage.cobertura.xml")) -targetdir:coveragereport
 }
 
