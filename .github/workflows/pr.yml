@@ -46,3 +46,39 @@ jobs:
           name: xunit-report
           path: artifacts/TestResults/*.trx
           reporter: dotnet-trx
+
+      - name: Upload Test Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: coveragereport
+    
+  test-coverage:
+    runs-on: ubuntu-latest
+    needs: [build]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download Test Report Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-report
+
+      - name: Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: Cobertura.xml
+          badge: true
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
