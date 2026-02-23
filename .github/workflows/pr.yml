@@ -64,6 +64,10 @@ jobs:
         with:
           name: test-report
 
+      - name: Debug Test Report
+        run: |
+          ls -la test-report
+          ls -la coveragereport
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
