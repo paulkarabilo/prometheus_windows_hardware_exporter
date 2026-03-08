@@ -16,8 +16,15 @@ if ($test) {
     dotnet restore ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj
     dotnet build ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c Debug --no-restore
     dotnet test ./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj -c Debug --no-build --logger "trx;LogFileName=TestResults.trx" --results-directory $testResultsDir --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" 
-    dotnet tool restore./PrometheusWindowsHardwareExporter.Tests/PrometheusWindowsHardwareExporter.Tests.csproj
-    dotnet tool run reportgenerator -reports:([IO.Path]::Combine($testResultsDir, "**", "coverage.cobertura.xml")) -targetdir:"coveragereport" -reporttypes:"Html;Cobertura;MarkdownSummaryGithub"
+
+    # restore tools before invoking reportgenerator
+    dotnet tool restore
+
+    dotnet tool run reportgenerator `
+        -reports:([IO.Path]::Combine($testResultsDir, "**", "coverage.cobertura.xml")) `
+        -targetdir:"coveragereport" `
+        -reporttypes:"Html;Cobertura;MarkdownSummaryGithub"
+    if ($LASTEXITCODE -ne 0) { throw "reportgenerator failed" }
 }
 
 New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
