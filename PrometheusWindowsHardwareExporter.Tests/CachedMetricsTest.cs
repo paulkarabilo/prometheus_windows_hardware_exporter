@@ -10,6 +10,11 @@ public class CachedMetricsTest
     public void TestEmptyCachedMetrics()
     {
         var computerMock = new Mock<IComputer>();
+        var hardwareMock = new Mock<IHardware>();
+        var sensorMock = new Mock<ISensor>();
+        hardwareMock.Setup(h => h.Name).Returns("TestHardware");
+        hardwareMock.Setup(h => h.Sensors).Returns(new[] { sensorMock.Object });
+        computerMock.Setup(c => c.Hardware).Returns(new[] { hardwareMock.Object });
         var cachedMetrics = new PrometheusWindowsHardwareExporter.CachedMetrics(computerMock.Object, TimeSpan.FromSeconds(10));
         var text = cachedMetrics.GetMetricsText();
         var lines = text.Split('\n');
