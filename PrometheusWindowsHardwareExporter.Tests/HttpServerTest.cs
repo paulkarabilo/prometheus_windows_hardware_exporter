@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-public class HttpServerTests
+public class HttpServerTest
 {
     [Fact]
     public async Task TestStartAndRespondsToMetricsAndHealth()
@@ -70,6 +70,7 @@ public class HttpServerTests
         HttpResponseMessage response = await client.GetAsync($"http://localhost:{port}/unknown");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("not found\n", await response.Content.ReadAsStringAsync());
 
         cts.Cancel();
         await runTask;

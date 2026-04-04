@@ -64,4 +64,5 @@ public class CachedMetricsTest
         Assert.Equal("prometheus_windows_hardware_exporter_error_info{error=\"Test exception\"} 1", lines[3]);
         Assert.Equal("", lines[4]);
     }
+
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PrometheusWindowsHardwareExporter
 {
-    internal sealed class CachedMetrics
+    internal class CachedMetrics
     {
         private readonly object _lock = new();
         private readonly IComputer _computer;
