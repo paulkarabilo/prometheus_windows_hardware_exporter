@@ -1,7 +1,7 @@
 ﻿namespace PrometheusWindowsHardwareExporter.Tests;
 
 using JsonSerializer = System.Text.Json.JsonSerializer;
-public class PrometheusWindowsHardwareExporterRendererTest
+public class ArgParserTest
 {
     [Fact]
     public void TestDefaultArgs()

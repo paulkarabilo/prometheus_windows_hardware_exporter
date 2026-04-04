@@ -133,7 +133,7 @@ scrape_configs:
 
 ## License
 
-See LICENSE and THIRD-PARTY-NOTICES.txt for licensing information.
+See LICENSE for licensing information.
 
 ## Dependencies
 
