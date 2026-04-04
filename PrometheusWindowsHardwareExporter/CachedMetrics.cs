@@ -1,23 +1,19 @@
 ﻿using LibreHardwareMonitor.Hardware;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PrometheusWindowsHardwareExporter
 {
     internal sealed class CachedMetrics
     {
         private readonly object _lock = new();
-        private readonly Computer _computer;
+        private readonly IComputer _computer;
         private readonly TimeSpan _minInterval;
         private readonly UpdateVisitor _visitor = new();
 
         private long _lastUpdateTicks;
         private string _cached = "# TYPE prometheus_windows_hardware_exporter_up gauge\nprometheus_windows_hardware_exporter_up 1\n";
-        public CachedMetrics(Computer computer, TimeSpan minInterval)
+        public CachedMetrics(IComputer computer, TimeSpan minInterval)
         {
             _computer = computer;
             _minInterval = minInterval;
@@ -49,8 +45,9 @@ namespace PrometheusWindowsHardwareExporter
                 _computer.Accept(_visitor);
 
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_up gauge\nprometheus_windows_hardware_exporter_up 1");
-                sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_temperature gauge");
+                sb.AppendLine("# TYPE prometheus_windows_hardware_exporter_up gauge");
+                sb.AppendLine("prometheus_windows_hardware_exporter_up 1");
+                sb.AppendLine("# TYPE prometheus_windows_hardware gauge");
 
                 foreach (IHardware hw in _computer.Hardware)
                     EmitTemps(sb, hw);
