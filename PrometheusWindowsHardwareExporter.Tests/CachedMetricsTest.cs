@@ -46,5 +46,22 @@ public class CachedMetricsTest
         Assert.Equal("prometheus_windows_hardware_exporter_up 1", lines[1]);
         Assert.Equal("# TYPE prometheus_windows_hardware gauge", lines[2]);
         Assert.Equal("prometheus_windows_hardware{hardware=\"TestHardware\",hardware_type=\"Cpu\",sensor=\"test_sensor\",sensor_type=\"Temperature\"} 42", lines[3]);
+        Assert.Equal("", lines[4]);
+    }
+
+    [Fact]
+    public void TestCachedMetricsErrorHandling()
+    {
+        var computerMock = new Mock<IComputer>();
+        computerMock.Setup(c => c.Hardware).Throws(new Exception("Test exception"));
+        var cachedMetrics = new PrometheusWindowsHardwareExporter.CachedMetrics(computerMock.Object, TimeSpan.FromSeconds(10));
+        var text = cachedMetrics.GetMetricsText();
+        var lines = text.Split('\n');
+        Assert.Equal(5, lines.Length);
+        Assert.Equal("# TYPE prometheus_windows_hardware_exporter_up gauge", lines[0]);
+        Assert.Equal("prometheus_windows_hardware_exporter_up 0", lines[1]);
+        Assert.Equal("# TYPE prometheus_windows_hardware_exporter_error_info gauge", lines[2]);
+        Assert.Equal("prometheus_windows_hardware_exporter_error_info{error=\"Test exception\"} 1", lines[3]);
+        Assert.Equal("", lines[4]);
     }
 }
