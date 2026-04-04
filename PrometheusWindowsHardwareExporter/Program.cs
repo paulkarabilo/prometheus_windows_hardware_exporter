@@ -1,11 +1,7 @@
-﻿using System;
-using System.Diagnostics.Eventing.Reader;
-using System.Runtime.CompilerServices;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.ServiceProcess;
 using LibreHardwareMonitor.Hardware;
 using LibreHardwareMonitor.PawnIo;
-using PrometheusWindowsHardwareExporter;
 
 namespace PrometheusWindowsHardwareExporter
 {

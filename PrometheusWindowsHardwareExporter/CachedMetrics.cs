@@ -50,7 +50,7 @@ namespace PrometheusWindowsHardwareExporter
                 sb.AppendLine("# TYPE prometheus_windows_hardware gauge");
 
                 foreach (IHardware hw in _computer.Hardware)
-                    EmitTemps(sb, hw);
+                    EmitSensors(sb, hw);
                 return sb.ToString().Replace("\r\n", "\n");
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace PrometheusWindowsHardwareExporter
             }
         }
 
-        private string EmitTemps(StringBuilder sb, IHardware hw)
+        private string EmitSensors(StringBuilder sb, IHardware hw)
         {
             foreach (ISensor sensor in hw.Sensors)
             {
@@ -87,7 +87,7 @@ namespace PrometheusWindowsHardwareExporter
                 }
                 foreach (IHardware subHw in hw.SubHardware)
                 {
-                    EmitTemps(sb, subHw);
+                    EmitSensors(sb, subHw);
                 }
             }
             return sb.ToString();
