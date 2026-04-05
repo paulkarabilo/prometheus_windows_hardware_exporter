@@ -35,6 +35,7 @@
   <ItemGroup>
     <None Update="Resources\config.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <TargetPath>config.yml</TargetPath>
     </None>
   </ItemGroup>
