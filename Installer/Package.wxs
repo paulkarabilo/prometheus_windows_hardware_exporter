@@ -58,7 +58,7 @@
                                 Account="LocalSystem"
                                 ErrorControl="normal"
                                 Vital="yes"
-                                Arguments="--service"/>
+                                Arguments="--config=&quot;[INSTALLFOLDER]config.yml&quot;"/>
 
                 <!-- Tell WiX to start the Service -->
                 <ServiceControl Id="StartService"
