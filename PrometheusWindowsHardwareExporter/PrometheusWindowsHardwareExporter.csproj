@@ -31,4 +31,12 @@
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\config.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <TargetPath>config.yml</TargetPath>
+    </None>
+  </ItemGroup>
 </Project>

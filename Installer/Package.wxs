@@ -9,7 +9,7 @@
 <?endif ?>
 
 <?ifndef PublishDir ?>
-<?define PublishDir = "..\PrometheusWindowsHardwareExporter\bin\Release\net8.0\publish" ?>
+<?define PublishDir = "..\PrometheusWindowsHardwareExporter\bin\Release\net10.0-windows\win-x64\publish" ?>
 <?endif ?>
 
 <?define UpgradeCode = "9ED3FF33-8718-444E-B44B-69A2344B7E98" ?>
@@ -41,6 +41,9 @@
                 <File Id="$(Name).exe"
                       Source="$(PublishDir)\$(Name).exe"
                       KeyPath="true" />
+
+                <File Id="config.yml"
+                      Source="$(PublishDir)\config.yml" />
 
                 <!-- Remove all files from the INSTALLFOLDER on uninstall -->
                 <RemoveFile Id="ALLFILES" Name="*.*" On="both" />

@@ -1,0 +1,9 @@
+web:
+  listen-address: http://localhost:9812
+  metrics-path: /metrics
+collect-interval: 15
+collectors:
+  enabled:
+    - cpu
+    - memory
+service: true
