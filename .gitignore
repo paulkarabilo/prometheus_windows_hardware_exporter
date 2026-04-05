@@ -7,3 +7,4 @@ PrometheusWindowsHardwareExporter.Tests/obj
 Installer/bin
 Installer/obj
 *.csproj.user
+*.pubxml.user
