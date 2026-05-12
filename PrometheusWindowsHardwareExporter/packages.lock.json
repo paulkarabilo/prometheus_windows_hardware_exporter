@@ -25,11 +25,11 @@
       },
       "System.ServiceProcess.ServiceController": {
         "type": "Direct",
-        "requested": "[10.0.7, )",
-        "resolved": "10.0.7",
-        "contentHash": "c8TTpzLzKjXZv4iDM4JErbg9rHcmIvZnW376W9qy3vlyO86rLX1XKEmyLxEBDUDrUtdcdThtqlnenxoYdH35hA==",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "/uCAiixsCUMBsxB7JTjE13RHvDJLq+BVL2toA+ItMMgJ6O07CtljbCoQF2RZ/9jO1RgC35FTGnQo5IAecE4JuQ==",
         "dependencies": {
-          "System.Diagnostics.EventLog": "10.0.7"
+          "System.Diagnostics.EventLog": "10.0.8"
         }
       },
       "YamlDotNet": {
@@ -180,8 +180,8 @@
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
-        "resolved": "10.0.7",
-        "contentHash": "WbmDLeTPYhEzXhvYVioTVn/D1XX6bovyny9n5p8Zxtf03+eY385RB818teZm6n+fA63iZNvng0/Np4tLuhkMhQ=="
+        "resolved": "10.0.8",
+        "contentHash": "+Ro7WgIom+BDNH+YhTuZKL6QJ0ctfOpTyfUG/h3aU5KwXt3OaNf0wYWrTvoBUj+34Dy5V8dN9yCco1hAJQ4txw=="
       },
       "System.IO.FileSystem.AccessControl": {
         "type": "Transitive",
@@ -223,11 +223,11 @@
       },
       "System.ServiceProcess.ServiceController": {
         "type": "Direct",
-        "requested": "[10.0.7, )",
-        "resolved": "10.0.7",
-        "contentHash": "c8TTpzLzKjXZv4iDM4JErbg9rHcmIvZnW376W9qy3vlyO86rLX1XKEmyLxEBDUDrUtdcdThtqlnenxoYdH35hA==",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "/uCAiixsCUMBsxB7JTjE13RHvDJLq+BVL2toA+ItMMgJ6O07CtljbCoQF2RZ/9jO1RgC35FTGnQo5IAecE4JuQ==",
         "dependencies": {
-          "System.Diagnostics.EventLog": "10.0.7"
+          "System.Diagnostics.EventLog": "10.0.8"
         }
       },
       "Mono.Posix.NETStandard": {
@@ -317,8 +317,8 @@
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
-        "resolved": "10.0.7",
-        "contentHash": "WbmDLeTPYhEzXhvYVioTVn/D1XX6bovyny9n5p8Zxtf03+eY385RB818teZm6n+fA63iZNvng0/Np4tLuhkMhQ=="
+        "resolved": "10.0.8",
+        "contentHash": "+Ro7WgIom+BDNH+YhTuZKL6QJ0ctfOpTyfUG/h3aU5KwXt3OaNf0wYWrTvoBUj+34Dy5V8dN9yCco1hAJQ4txw=="
       },
       "System.IO.FileSystem.AccessControl": {
         "type": "Transitive",
